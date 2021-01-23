@@ -1,0 +1,6 @@
+  # Configure project on machine
+*.iml
+.idea/
+
+# Target's
+*/target/
