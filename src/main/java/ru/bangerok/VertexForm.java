@@ -2,12 +2,11 @@ package ru.bangerok;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.Random;
 
 public class VertexForm {
+    private final Random random = new Random();
     private JPanel vertexPanel;
     private JLabel randomNumberValue;
     private JPopupMenu contextMenu;
@@ -38,10 +37,9 @@ public class VertexForm {
         vertexPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1) {
-                    if (!oneSecondTimer.isRunning() && !oneAndHalfSecondTimer.isRunning()) {
-                        generateAndUpdateForm();
-                    }
+                if (e.getButton() == MouseEvent.BUTTON1 &&
+                        (!oneSecondTimer.isRunning() && !oneAndHalfSecondTimer.isRunning())) {
+                    generateAndUpdateForm();
                 }
 
                 if (e.getButton() == MouseEvent.BUTTON3) {
@@ -52,9 +50,60 @@ public class VertexForm {
         });
     }
 
-    private void generateAndUpdateForm() {
-        Random random = new Random();
+    public static void main(String[] args) {
+        Runnable runnable = VertexForm::run;
+        SwingUtilities.invokeLater(runnable);
+    }
 
+    private static void run() {
+        JFrame frame = new JFrame("VertexForm");
+        frame.setUndecorated(true);
+        frame.setContentPane(new VertexForm().vertexPanel);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        final Point[] mouseDownCompCoords = {null};
+        frame.getContentPane().addMouseListener(new MouseListener() {
+            public void mouseReleased(MouseEvent e) {
+                mouseDownCompCoords[0] = null;
+            }
+
+            public void mousePressed(MouseEvent e) {
+                mouseDownCompCoords[0] = e.getPoint();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Needed for working
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Needed for working
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Needed for working
+            }
+        });
+
+        frame.getContentPane().addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                Point currCoords = e.getLocationOnScreen();
+                frame.setLocation(currCoords.x - mouseDownCompCoords[0].x, currCoords.y - mouseDownCompCoords[0].y);
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                // Needed for working
+            }
+        });
+    }
+
+    private void generateAndUpdateForm() {
         int randomNumber = random.nextInt(100);
         Color color;
         if (randomNumber <= 49) {
@@ -73,13 +122,5 @@ public class VertexForm {
                 timer.start();
             }
         });
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("VertexForm");
-        frame.setUndecorated(true);
-        frame.setContentPane(new VertexForm().vertexPanel);
-        frame.pack();
-        frame.setVisible(true);
     }
 }
