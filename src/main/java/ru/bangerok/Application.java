@@ -1,7 +1,6 @@
 package ru.bangerok;
 
 import ru.bangerok.form.VertexForm;
-import ru.bangerok.service.VertexServiceImpl;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,24 +9,16 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 public class Application {
-
-    public static final String TITLE = "VertexForm";
-
     public static void main(String[] args) {
         Runnable runnable = Application::run;
         SwingUtilities.invokeLater(runnable);
     }
 
     private static void run() {
-        JFrame frame = new JFrame(TITLE);
-        frame.setUndecorated(true);
-        frame.setContentPane(new VertexForm(new VertexServiceImpl()).getVertexPanel());
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        VertexForm frame = new VertexForm();
 
         final Point[] mouseDownCompCoords = {null};
-        frame.getContentPane().addMouseListener(new MouseListener() {
+        frame.getContentPane().getComponent(0).addMouseListener(new MouseListener() {
             public void mouseReleased(MouseEvent e) {
                 mouseDownCompCoords[0] = null;
             }
@@ -52,7 +43,7 @@ public class Application {
             }
         });
 
-        frame.getContentPane().addMouseMotionListener(new MouseMotionListener() {
+        frame.getContentPane().getComponent(0).addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 Point currCoords = e.getLocationOnScreen();
