@@ -26,6 +26,8 @@ public class VertexServiceImpl implements VertexService {
     public JMenuItem creatingWithTimerItemMenu(String title, Timer timer) {
         return new JMenuItem(new AbstractAction(title) {
             public void actionPerformed(ActionEvent e) {
+                JMenuItem menuItem = (JMenuItem) e.getSource();
+                menuItem.setText(menuItem.getText().concat(" [ON]"));
                 timer.start();
             }
         });
