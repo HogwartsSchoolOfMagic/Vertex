@@ -54,6 +54,7 @@ public class VertexForm extends JFrame {
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+        this.setAlwaysOnTop(true);
     }
 
     private JLabel configuringRandomNumberLabel() {
