@@ -3,7 +3,29 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <packaging>jar</packaging>
+    <groupId>ru.bangerok.fun</groupId>
+    <artifactId>vertex</artifactId>
+    <version>0.2.0</version>
+
+    <properties>
+        <!-- Dependencies -->
+        <lombok.version>1.18.20</lombok.version>
+
+        <!-- Plugins -->
+        <maven-compiler.version>3.8.1</maven-compiler.version>
+        <checkstyle-plugin.version>3.1.2</checkstyle-plugin.version>
+        <puppycrawl.checkstyle.version>8.43</puppycrawl.checkstyle.version>
+
+        <!-- Utils -->
+        <java.version>16</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Sonar Cloud -->
+        <sonar.projectKey>FunProjectsForSoul_Vertex</sonar.projectKey>
+        <sonar.organization>fun-projects-for-soul</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -13,41 +35,43 @@
         </dependency>
     </dependencies>
 
-    <groupId>ru.bangerok</groupId>
-    <artifactId>Vertex</artifactId>
-    <version>1.0-SNAPSHOT</version>
-
-    <properties>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <lombok.version>1.18.20</lombok.version>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${puppycrawl.checkstyle.version}</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <configLocation>google-check-style.xml</configLocation>
+                    <violationSeverity>warning</violationSeverity>
+                    <consoleOutput>true</consoleOutput>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>src.main.java.Main</mainClass>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>dependency/</classpathPrefix>
-                        </manifest>
-                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-                    </archive>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
         </plugins>
