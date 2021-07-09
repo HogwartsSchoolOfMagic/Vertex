@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.Random;
+import java.security.SecureRandom;
 import javax.swing.AbstractAction;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -25,7 +25,7 @@ import ru.bangerok.fun.vertex.form.VertexForm;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class VertexUtil {
 
-  private static final Random rnd = new Random();
+  private static final SecureRandom rnd = new SecureRandom();
 
   /**
    * Generation of a random number from 0 to 100 and, according to the resulting number,
