@@ -1,5 +1,9 @@
 package ru.bangerok.fun.vertex.form;
 
+import static java.awt.event.MouseEvent.BUTTON1;
+import static ru.bangerok.fun.vertex.util.VertexUtil.creatingWithTimerItemMenu;
+import static ru.bangerok.fun.vertex.util.VertexUtil.generateAndUpdateForm;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -15,67 +19,73 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import lombok.Getter;
-import ru.bangerok.fun.vertex.service.VertexService;
-import ru.bangerok.fun.vertex.service.VertexServiceImpl;
 
+/**
+ * A shape that displays a random number and its corresponding color.
+ *
+ * @author Vladislav [Bangerok] Vladislav.
+ * @since 0.0.1.
+ */
 @Getter
 public class VertexForm extends JFrame {
 
-  public static final String TITLE = "VertexForm";
+  private final Dimension dimension = new Dimension(110, 110);
 
-  private final Dimension classicSize = new Dimension(110, 110);
-  private final JPanel vertexPanel = new JPanel();
-  private final JLabel randomNumberValue = configuringRandomNumberLabel();
-  private JPopupMenu contextMenu;
-
+  /**
+   * Form initialization with all timers, menus and listeners.
+   */
   public VertexForm() {
-    super(TITLE);
+    super("VertexForm");
     configuringFrame();
 
-    Timer oneSecondTimer =
-        new Timer(1000, e -> getService().generateAndUpdateForm(vertexPanel, randomNumberValue));
-    Timer oneAndHalfSecondTimer =
-        new Timer(1500, e -> getService().generateAndUpdateForm(vertexPanel, randomNumberValue));
-    creatingContextMenu(oneSecondTimer, oneAndHalfSecondTimer);
+    var vertexPanel = new JPanel();
+    var rndField = configuringRandomNumberLabel();
+    var firstTimer = new Timer(1000, e -> generateAndUpdateForm(vertexPanel, rndField));
+    var secondTimer = new Timer(1500, e -> generateAndUpdateForm(vertexPanel, rndField));
+    var menu = creatingContextMenu(firstTimer, secondTimer);
 
     vertexPanel.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1
-            && (!oneSecondTimer.isRunning() && !oneAndHalfSecondTimer.isRunning())) {
-          getService().generateAndUpdateForm(vertexPanel, randomNumberValue);
+        if (e.getButton() == BUTTON1 && (!firstTimer.isRunning() && !secondTimer.isRunning())) {
+          generateAndUpdateForm(vertexPanel, rndField);
         }
 
         if (e.getButton() == MouseEvent.BUTTON3) {
-          contextMenu.getComponent(3)
-              .setEnabled(oneSecondTimer.isRunning() || oneAndHalfSecondTimer.isRunning());
-          contextMenu.getComponent(0)
-              .setEnabled(!oneSecondTimer.isRunning() && !oneAndHalfSecondTimer.isRunning());
-          contextMenu.getComponent(1)
-              .setEnabled(!oneSecondTimer.isRunning() && !oneAndHalfSecondTimer.isRunning());
-          contextMenu.show(e.getComponent(), e.getX(), e.getY());
+          menu.getComponent(3).setEnabled(firstTimer.isRunning() || secondTimer.isRunning());
+          menu.getComponent(0).setEnabled(!firstTimer.isRunning() && !secondTimer.isRunning());
+          menu.getComponent(1).setEnabled(!firstTimer.isRunning() && !secondTimer.isRunning());
+          menu.show(e.getComponent(), e.getX(), e.getY());
         }
       }
     });
 
-    getService().generateAndUpdateForm(vertexPanel, randomNumberValue);
-    vertexPanel.add(randomNumberValue);
-    vertexPanel.add(contextMenu);
+    generateAndUpdateForm(vertexPanel, rndField);
+    vertexPanel.add(rndField);
+    vertexPanel.add(menu);
     this.getContentPane().add(vertexPanel);
   }
 
+  /**
+   * Basic form settings.
+   */
   private void configuringFrame() {
-    this.setPreferredSize(classicSize);
-    this.setUndecorated(true);
-    this.pack();
-    this.setLocationRelativeTo(null);
-    this.setVisible(true);
-    this.setAlwaysOnTop(true);
+    setPreferredSize(dimension);
+    setUndecorated(true);
+    pack();
+    setLocationRelativeTo(null);
+    setVisible(true);
+    setAlwaysOnTop(true);
   }
 
+  /**
+   * Field configuration for a random number.
+   *
+   * @return configured field.
+   */
   private JLabel configuringRandomNumberLabel() {
-    JLabel label = new JLabel();
-    label.setPreferredSize(classicSize);
+    var label = new JLabel();
+    label.setPreferredSize(dimension);
     label.setHorizontalAlignment(SwingConstants.CENTER);
     label.setVerticalAlignment(SwingConstants.CENTER);
     label.setFont(new Font("Courier New", Font.PLAIN, 72));
@@ -83,45 +93,49 @@ public class VertexForm extends JFrame {
     return label;
   }
 
-  private void creatingContextMenu(Timer oneSecondTimer, Timer oneAndHalfSecondTimer) {
-    JMenuItem oneSecondMenuItem =
-        getService().creatingWithTimerItemMenu("1 секунда", oneSecondTimer);
-    JMenuItem oneAndHalfSecondMenuItem =
-        getService().creatingWithTimerItemMenu("1.5 секунды", oneAndHalfSecondTimer);
+  /**
+   * Creation and configuration of a contextual, pop-up menu.
+   *
+   * @param firstTimer  first timer for the menu.
+   * @param secondTimer second timer for the menu.
+   * @return configured context/popup menu.
+   */
+  private JPopupMenu creatingContextMenu(Timer firstTimer, Timer secondTimer) {
+    var contextMenu = new JPopupMenu();
 
-    JMenuItem stoppedMenuItem = new JMenuItem(new AbstractAction("Выключить авто обновление") {
+    var oneSecondMenuItem = creatingWithTimerItemMenu("1 секунда", firstTimer);
+    contextMenu.add(oneSecondMenuItem);
+
+    var oneAndHalfSecondMenuItem = creatingWithTimerItemMenu("1.5 секунды", secondTimer);
+    contextMenu.add(oneAndHalfSecondMenuItem);
+    contextMenu.add(new JSeparator());
+
+    var stoppedMenuItem = new JMenuItem(new AbstractAction("Выключить авто обновление") {
       public void actionPerformed(ActionEvent e) {
         int indexMenuItem = 0;
-        if (oneSecondTimer.isRunning()) {
-          oneSecondTimer.stop();
+        if (firstTimer.isRunning()) {
+          firstTimer.stop();
         }
 
-        if (oneAndHalfSecondTimer.isRunning()) {
+        if (secondTimer.isRunning()) {
           indexMenuItem = 1;
-          oneAndHalfSecondTimer.stop();
+          secondTimer.stop();
         }
 
-        JMenuItem menuItem = (JMenuItem) contextMenu.getComponent(indexMenuItem);
+        var menuItem = (JMenuItem) contextMenu.getComponent(indexMenuItem);
         menuItem.setText(menuItem.getText().substring(0, indexMenuItem == 0 ? 9 : 11));
       }
     });
+    contextMenu.add(stoppedMenuItem);
+    contextMenu.add(new JSeparator());
 
-    JMenuItem exitMenuItem = new JMenuItem(new AbstractAction("Выйти") {
+    var exitMenuItem = new JMenuItem(new AbstractAction("Выйти") {
       public void actionPerformed(ActionEvent e) {
         System.exit(0);
       }
     });
-
-    contextMenu = new JPopupMenu();
-    contextMenu.add(oneSecondMenuItem);
-    contextMenu.add(oneAndHalfSecondMenuItem);
-    contextMenu.add(new JSeparator());
-    contextMenu.add(stoppedMenuItem);
-    contextMenu.add(new JSeparator());
     contextMenu.add(exitMenuItem);
-  }
 
-  private VertexService getService() {
-    return new VertexServiceImpl();
+    return contextMenu;
   }
 }
