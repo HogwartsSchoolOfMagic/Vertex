@@ -1,6 +1,6 @@
-  # Configure project on machine
+# Intellij Idea
 *.iml
 .idea/
 
-# Target's
+# Maven
 **/target/
