@@ -2,78 +2,166 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>ru.bangerok.fun</groupId>
-    <artifactId>vertex</artifactId>
-    <version>0.2.0</version>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ru.bangerok.fun</groupId>
+  <artifactId>vertex</artifactId>
+  <version>1.0.0</version>
+  <name>VertexForm</name>
+  <description>Desktop application for random updating of the displayed number.</description>
+  <url>https://github.com/FunProjectsForSoul/Vertex</url>
 
-    <properties>
-        <!-- Dependencies -->
-        <lombok.version>1.18.20</lombok.version>
+  <properties>
+    <!-- Dependencies -->
+    <lombok.version>1.18.20</lombok.version>
 
-        <!-- Plugins -->
-        <maven-compiler.version>3.8.1</maven-compiler.version>
-        <checkstyle-plugin.version>3.1.2</checkstyle-plugin.version>
-        <puppycrawl.checkstyle.version>8.43</puppycrawl.checkstyle.version>
+    <!-- Plugins -->
+    <maven-compiler.version>3.8.1</maven-compiler.version>
+    <maven-dependency.version>3.1.2</maven-dependency.version>
+    <maven-jar.version>3.2.0</maven-jar.version>
+    <checkstyle-plugin.version>3.1.2</checkstyle-plugin.version>
+    <puppycrawl.checkstyle.version>8.43</puppycrawl.checkstyle.version>
+    <launch4j.version>2.1.1</launch4j.version>
 
-        <!-- Utils -->
-        <java.version>16</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Utils -->
+    <java.version>16</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!-- Sonar Cloud -->
-        <sonar.projectKey>FunProjectsForSoul_Vertex</sonar.projectKey>
-        <sonar.organization>fun-projects-for-soul</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    </properties>
+    <!-- Sonar Cloud -->
+    <sonar.projectKey>FunProjectsForSoul_Vertex</sonar.projectKey>
+    <sonar.organization>fun-projects-for-soul</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+  </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${checkstyle-plugin.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>${puppycrawl.checkstyle.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <configLocation>google-check-style.xml</configLocation>
-                    <violationSeverity>warning</violationSeverity>
-                    <consoleOutput>true</consoleOutput>
-                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>validate</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${checkstyle-plugin.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>${puppycrawl.checkstyle.version}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <configLocation>google-check-style.xml</configLocation>
+          <violationSeverity>warning</violationSeverity>
+          <consoleOutput>true</consoleOutput>
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>validate</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler.version}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+        <artifactId>launch4j-maven-plugin</artifactId>
+        <version>${launch4j.version}</version>
+        <executions>
+          <execution>
+            <id>l4j-clui</id>
+            <phase>install</phase>
+            <goals>
+              <goal>launch4j</goal>
+            </goals>
+            <configuration>
+              <headerType>gui</headerType>
+              <outfile>target/${project.artifactId}.exe</outfile>
+              <jar>target/${project.artifactId}-${project.version}.${project.packaging}</jar>
+              <errTitle>${project.artifactId}</errTitle>
+              <downloadUrl>
+                https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_x64_windows_hotspot_16.0.1_9.msi
+              </downloadUrl>
+              <restartOnCrash>true</restartOnCrash>
+              <classPath>
+                <mainClass>ru.bangerok.fun.vertex.VertexApplication</mainClass>
+                <addDependencies>true</addDependencies>
+                <preCp>anything</preCp>
+              </classPath>
+              <jre>
+                <path>%JAVA_HOME%\bin</path>
+                <minVersion>1.8</minVersion>
+              </jre>
+              <versionInfo>
+                <fileVersion>${project.version}.0</fileVersion>
+                <txtFileVersion>${project.version}.0</txtFileVersion>
+                <fileDescription>${project.description}</fileDescription>
+                <copyright>Copyright © 2021 Vladislav [Bangerok] Kuznetsov</copyright>
+                <productVersion>${project.version}.0</productVersion>
+                <txtProductVersion>${project.version}</txtProductVersion>
+                <productName>${project.name}</productName>
+                <internalName>${project.name}</internalName>
+                <originalFilename>${project.artifactId}.exe</originalFilename>
+              </versionInfo>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${maven-dependency.version}</version>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${maven-jar.version}</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>lib/</classpathPrefix>
+              <mainClass>ru.bangerok.fun.vertex.VertexApplication</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
