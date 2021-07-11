@@ -1,8 +1,8 @@
-package ru.bangerok.fun.vertex.form;
+package io.github.hogwartsschoolofmagic.vertex.form;
 
+import static io.github.hogwartsschoolofmagic.vertex.util.VertexUtil.creatingWithTimerItemMenu;
+import static io.github.hogwartsschoolofmagic.vertex.util.VertexUtil.generateAndUpdateForm;
 import static java.awt.event.MouseEvent.BUTTON1;
-import static ru.bangerok.fun.vertex.util.VertexUtil.creatingWithTimerItemMenu;
-import static ru.bangerok.fun.vertex.util.VertexUtil.generateAndUpdateForm;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -23,7 +23,7 @@ import lombok.Getter;
 /**
  * A shape that displays a random number and its corresponding color.
  *
- * @author Vladislav [Bangerok] Vladislav.
+ * @author Vladislav [SmithyVL] Vladislav.
  * @since 0.0.1.
  */
 @Getter

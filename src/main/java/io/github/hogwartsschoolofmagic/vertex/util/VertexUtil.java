@@ -1,5 +1,6 @@
-package ru.bangerok.fun.vertex.util;
+package io.github.hogwartsschoolofmagic.vertex.util;
 
+import io.github.hogwartsschoolofmagic.vertex.form.VertexForm;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -14,12 +15,11 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import ru.bangerok.fun.vertex.form.VertexForm;
 
 /**
  * Vertex Form Utilities.
  *
- * @author Vladislav [Bangerok] Kuznetsov.
+ * @author Vladislav [SmithyVL] Kuznetsov.
  * @since 0.2.1.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

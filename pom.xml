@@ -2,78 +2,231 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>ru.bangerok.fun</groupId>
-    <artifactId>vertex</artifactId>
-    <version>0.2.0</version>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.github.hogwartsschoolofmagic</groupId>
+  <artifactId>vertex</artifactId>
+  <version>1.0.0</version>
+  <name>VertexForm</name>
+  <description>Desktop application for random updating of the displayed number.</description>
+  <url>https://github.com/HogwartsSchoolOfMagic/Vertex</url>
 
-    <properties>
-        <!-- Dependencies -->
-        <lombok.version>1.18.20</lombok.version>
+  <organization>
+    <name>Vladislav Kuznetsov</name>
+    <url>https://vk.com/vladislav_kuznetsov</url>
+  </organization>
 
-        <!-- Plugins -->
-        <maven-compiler.version>3.8.1</maven-compiler.version>
-        <checkstyle-plugin.version>3.1.2</checkstyle-plugin.version>
-        <puppycrawl.checkstyle.version>8.43</puppycrawl.checkstyle.version>
+  <contributors>
+    <contributor>
+      <name>Vladislav Kuznetsov</name>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </contributor>
+  </contributors>
 
-        <!-- Utils -->
-        <java.version>16</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  <properties>
+    <!-- Dependencies -->
+    <lombok.version>1.18.24</lombok.version>
 
-        <!-- Sonar Cloud -->
-        <sonar.projectKey>FunProjectsForSoul_Vertex</sonar.projectKey>
-        <sonar.organization>fun-projects-for-soul</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    </properties>
+    <!-- Plugins -->
+    <maven-compiler.version>3.10.1</maven-compiler.version>
+    <maven-dependency.version>3.3.0</maven-dependency.version>
+    <maven-jar.version>3.2.2</maven-jar.version>
+    <launch4j.version>2.1.1</launch4j.version>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
+    <!-- Utils -->
+    <java.version>18</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
-    <build>
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler.version}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+        <artifactId>launch4j-maven-plugin</artifactId>
+        <version>${launch4j.version}</version>
+        <executions>
+          <execution>
+            <id>l4j-clui</id>
+            <phase>install</phase>
+            <goals>
+              <goal>launch4j</goal>
+            </goals>
+            <configuration>
+              <headerType>gui</headerType>
+              <outfile>target/${project.artifactId}.exe</outfile>
+              <jar>target/${project.artifactId}-${project.version}.${project.packaging}</jar>
+              <errTitle>${project.artifactId}</errTitle>
+              <downloadUrl>
+                https://adoptium.net/temurin/releases
+              </downloadUrl>
+              <restartOnCrash>true</restartOnCrash>
+              <classPath>
+                <mainClass>io.github.hogwartsschoolofmagic.vertex.VertexApplication</mainClass>
+                <addDependencies>true</addDependencies>
+                <preCp>anything</preCp>
+              </classPath>
+              <jre>
+                <path>%JAVA_HOME%\bin</path>
+                <minVersion>1.8</minVersion>
+              </jre>
+              <versionInfo>
+                <fileVersion>${project.version}.0</fileVersion>
+                <txtFileVersion>${project.version}.0</txtFileVersion>
+                <fileDescription>${project.description}</fileDescription>
+                <copyright>Copyright © 2022 Vladislav [SmithyVL] Kuznetsov</copyright>
+                <productVersion>${project.version}.0</productVersion>
+                <txtProductVersion>${project.version}</txtProductVersion>
+                <productName>${project.name}</productName>
+                <internalName>${project.name}</internalName>
+                <originalFilename>${project.artifactId}.exe</originalFilename>
+              </versionInfo>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${maven-dependency.version}</version>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${maven-jar.version}</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>lib/</classpathPrefix>
+              <mainClass>io.github.hogwartsschoolofmagic.vertex.VertexApplication</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>checkstyle</id>
+      <properties>
+        <!-- Plugin properties -->
+        <puppycrawl.checkstyle.version>10.3</puppycrawl.checkstyle.version>
+        <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
+      </properties>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${checkstyle-plugin.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>${puppycrawl.checkstyle.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <configLocation>google-check-style.xml</configLocation>
-                    <violationSeverity>warning</violationSeverity>
-                    <consoleOutput>true</consoleOutput>
-                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>validate</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <!--suppress MavenModelInspection -->
+            <version>${maven-checkstyle-plugin.version}</version>
+            <dependencies>
+              <dependency>
+                <groupId>com.puppycrawl.tools</groupId>
+                <artifactId>checkstyle</artifactId>
+                <!--suppress MavenModelInspection -->
+                <version>${puppycrawl.checkstyle.version}</version>
+              </dependency>
+            </dependencies>
+            <configuration>
+              <configLocation>docs/google-check-style.xml</configLocation>
+              <violationSeverity>warning</violationSeverity>
+              <consoleOutput>true</consoleOutput>
+              <includeTestSourceDirectory>true</includeTestSourceDirectory>
+            </configuration>
+            <executions>
+              <execution>
+                <id>validate</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
-    </build>
+      </build>
+    </profile>
+
+    <profile>
+      <id>sonar</id>
+      <properties>
+        <!-- Plugin properties -->
+        <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
+
+        <!-- Code analyzer: SonarCloud -->
+        <sonar.projectKey>HogwartsSchoolOfMagic_Vertex</sonar.projectKey>
+        <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
+        <sonar.organization>hogwarts-school-of-magic</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.sources>src/main/java</sonar.sources>
+        <sonar.java.binaries>target/classes</sonar.java.binaries>
+      </properties>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <!--suppress MavenModelInspection -->
+            <version>${sonar-maven-plugin.version}</version>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sonar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
